@@ -68,10 +68,10 @@ class Blockchain {
             // block height
             block.height = self.chain.length;
             // UTC timestamp
-            block.timeStamp = new Date().getTime().toString().slice(0,-3);
+            block.time =this._getCurrentTimeStamp();
             if (self.chain.length>0) {
                 // previous block hash
-                block.previousBlockHash = self.chain[self.chain.length-1]
+                block.previousBlockHash = self.chain[self.chain.length-1].hash;
             }
             // SHA256 requires a string of data
             block.hash = SHA256(JSON.stringify(block)).toString();
@@ -216,10 +216,25 @@ class Blockchain {
         const self = this;
         const errorLog = [];
         return new Promise(async (resolve, reject) => {
-            self.chain.forEach((block) => {
+            self.chain.forEach((block,index) => {
+                
                 if (!block.validate()){
-                    errorLog.push(`Block: ${block.hash} is not valid`)
+                    errorLog.push({
+                                error:`Block: ${block.hash} is not valid`,
+                                hash: block.hash
+                            })
                 }
+                if (block.height>0){
+                    const previousBlockHashReference = block.previousBlockHash
+                    const previousBlockHash = self.chain[index-1].hash
+                    if(previousBlockHashReference != previousBlockHash ){
+                        errorLog.push({
+                            error:`Block previous hash reference: ${previousBlockHashReference} does not match previous hash:${previousBlockHash}`,
+                            hash: block.hash
+                        })
+                    }
+                }
+
             });
             resolve(errorLog)
             

@@ -120,7 +120,7 @@ class BlockchainController {
 
     // This endpoint allows you to check if the blocks in the blockchain are valid
     getChainValidation() {
-        this.app.get("/blocks/chain/validate", async (req, res) => {
+        this.app.get("/validateChain", async (req, res) => {
             try {
                 const errorLogs = await this.blockchain.validateChain();
                 
