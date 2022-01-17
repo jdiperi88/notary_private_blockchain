@@ -34,10 +34,16 @@ class Blockchain {
      * Passing as a data `{data: 'Genesis Block'}`
      */
     async initializeChain() {
-        if( this.height === -1){
-            let block = new BlockClass.Block({data: 'Genesis Block'});
-            await this._addBlock(block);
+        try {
+            if( this.height === -1){
+                let block = new BlockClass.Block({data: 'Genesis Block'});
+                await this._addBlock(block);
+            }
         }
+        catch(e) {
+            console.log(e)
+        }
+
     }
 
     /**
@@ -79,8 +85,14 @@ class Blockchain {
             // add block to chain
             self.chain.push(block);
             self.height += 1
-            console.log(self.chain)
-            resolve(self.chain[0])
+
+            //validate chain
+            const errorLogs = await self.validateChain()
+            if (errorLogs == 0){
+                return resolve(self.chain[0])
+            }
+
+            return reject(new Error("Chain is corrupt!"))
 
         });
     }
@@ -139,7 +151,7 @@ class Blockchain {
                                 star
                             }
                 const block = new BlockClass.Block(data);
-                resolve(await self._addBlock(block))
+                return resolve(await self._addBlock(block))
             }
             return reject(new Error("Block must be added in less than 5 minutes."))
         })
