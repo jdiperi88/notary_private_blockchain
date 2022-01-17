@@ -33,14 +33,14 @@ class Block {
      *  3. Recalculate the hash of the entire block (Use SHA256 from crypto-js library)
      *  4. Compare if the auxiliary hash value is different from the calculated one.
      *  5. Resolve true or false depending if it is valid or not.
-     *  Note: to access the class values inside a Promise code you need to create an auxiliary value `let self = this;`
+     *  Note: to access the class values inside a Promise code you need to create an auxiliary value `const self = this;`
      */
     validate() {
-        let self = this;
+        const self = this;
         return new Promise((resolve, reject) => {
             // Save in auxiliary variable the current block hash
-            currentHash = self.hash
-            hash = SHA256(JSON.stringify(self))
+            const currentHash = self.hash
+            const hash = SHA256(JSON.stringify(self))
 
             if(currentHash === hash){
                 resolve(true)
@@ -65,10 +65,10 @@ class Block {
         // Parse the data to an object to be retrieve.
 
         // Resolve with the data if the object isn't the Genesis block
-        let self = this;
+        const self = this;
         return new Promise((resolve, reject) => {
 
-            let decodedData = JSON.parse(hex2ascii(this.body))
+            const decodedData = JSON.parse(hex2ascii(this.body))
             try {
                 if (self.height > 0) {
                   resolve(decodedData);

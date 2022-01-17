@@ -126,9 +126,9 @@ class Blockchain {
     submitStar(address, message, signature, star) {
         let self = this;
         return new Promise(async (resolve, reject) => {
-            let blockTime = parseInt(message.split(':')[1]);
-            let currentTime = parseInt(new Date().getTime().toString().slice(0,-3));
-            if (currentTime-blockTime > 300 ) {
+            const blockTime = parseInt(message.split(':')[1]);
+            const currentTime = parseInt(new Date().getTime().toString().slice(0,-3));
+            if (currentTime - blockTime > 300 ) {
                 if(!bitcoinMessage.verify(message, address, signature)){
                     return reject(new Error("Bitcoin message unverified."))
                 }
@@ -187,13 +187,13 @@ class Blockchain {
      * @param {*} address 
      */
     getStarsByWalletAddress (address) {
-        let self = this;
-        let stars = [];
+        const self = this;
+        const stars = [];
         return new Promise( (resolve, reject) => {
 
             self.chain.forEach(async (block) => {
                 try {
-                    let data = await block.getBData();
+                    const data = await block.getBData();
                     if (data.address === address){ 
                         stars.push(data);
                     }
@@ -213,8 +213,8 @@ class Blockchain {
      * 2. Each Block should check the with the previousBlockHash
      */
     validateChain() {
-        let self = this;
-        let errorLog = [];
+        const self = this;
+        const errorLog = [];
         return new Promise(async (resolve, reject) => {
             self.chain.forEach((block) => {
                 if (!block.validate()){
